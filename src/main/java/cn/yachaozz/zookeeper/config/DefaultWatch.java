@@ -44,6 +44,8 @@ public class DefaultWatch implements Watcher {
                 break;
             case Expired:
                 break;
+            default:
+                System.out.println("执行了默认");;
         }
     }
 }

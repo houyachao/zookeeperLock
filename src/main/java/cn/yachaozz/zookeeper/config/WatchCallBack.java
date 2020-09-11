@@ -40,6 +40,8 @@ public class WatchCallBack implements Watcher, AsyncCallback.StringCallback,
                 break;
             case NodeChildrenChanged:
                 break;
+                default:
+                    System.out.println("执行了默认");
         }
     }
 
