@@ -23,9 +23,8 @@ public class ZkLockUtils {
 
         try {
             //创建Zookeeper
-
             defaultWatch.setCountDownLatch(countDownLatch);
-            zk = new ZooKeeper(address, 5000, defaultWatch);
+            zk = new ZooKeeper(address, 1000, defaultWatch);
             countDownLatch.await();
             System.out.println(zk.toString());
         } catch (Exception e) {

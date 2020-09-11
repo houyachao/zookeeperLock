@@ -14,7 +14,7 @@ import java.util.concurrent.CountDownLatch;
 public class WatchCallBack implements Watcher, AsyncCallback.StringCallback,
         AsyncCallback.Children2Callback, AsyncCallback.StatCallback {
 
-    private static ZooKeeper zk;
+    private ZooKeeper zk;
     private String threadName;
     private CountDownLatch countDownLatch = new CountDownLatch(1);
     private String pathName;
@@ -34,6 +34,7 @@ public class WatchCallBack implements Watcher, AsyncCallback.StringCallback,
             case NodeCreated:
                 break;
             case NodeDeleted:
+                System.out.println("我要给下一个节点通知。。。。");
                 zk.getChildren("/", false, this, "xxx");
                 break;
             case NodeDataChanged:
@@ -54,8 +55,7 @@ public class WatchCallBack implements Watcher, AsyncCallback.StringCallback,
     }
 
     public void tryLock() {
-        System.out.println(threadName + "我创建了Zookeeper节点");
-
+        System.out.println(threadName + " 我要开始创建Zookeeper节点");
         try {
             // 创建有序的节点
             zk.create("/lock", threadName.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE,
@@ -82,7 +82,7 @@ public class WatchCallBack implements Watcher, AsyncCallback.StringCallback,
             pathName = name;
 
             //获取/testLock 下所有的节点，不监听
-            zk.getChildren("/", false, this, "abc");
+            zk.getChildren("/", false, this, o);
         }
     }
 
@@ -100,11 +100,15 @@ public class WatchCallBack implements Watcher, AsyncCallback.StringCallback,
         //对这些节点拍个顺序
         Collections.sort(childrenList);
 
+
         //获取第一个节点线程
         int index = childrenList.indexOf(pathName.substring(1));
 
         if (index == 0) {
             //是第一个
+            for (String s1 : childrenList) {
+                System.out.println(s1);
+            }
             System.out.println(threadName + "是第一个。。。");
             try {
 
@@ -119,9 +123,10 @@ public class WatchCallBack implements Watcher, AsyncCallback.StringCallback,
             }
         } else {
             //监听前一个节点
-            zk.exists("/" + childrenList.get(i -1), this, this, "aaa");
+//            System.out.println(threadName + " 监控 " + childrenList.get(i-1) + "............");
+            zk.exists("/" + childrenList.get(i -1), this, this, o);
+            System.out.println(threadName + " 监控 " + childrenList.get(i-1) + "............");
         }
-
     }
 
     /**
@@ -141,7 +146,9 @@ public class WatchCallBack implements Watcher, AsyncCallback.StringCallback,
      */
     public void unLock() {
         try {
+            System.out.println(pathName);
             zk.delete(pathName, -1);
+            zk.close();
             System.out.println(threadName + "我释放锁了。。。。");
         } catch (InterruptedException e) {
             e.printStackTrace();

@@ -25,27 +25,31 @@ public class DefaultWatch implements Watcher {
     public void process(WatchedEvent watchedEvent) {
         System.out.println(watchedEvent.toString());
 
-        switch (watchedEvent.getState()) {
-            case Unknown:
-                break;
-            case Disconnected:
-                break;
-            case NoSyncConnected:
-                break;
-            case SyncConnected:
-                //这里是创建完链接后，先阻塞一下，因为客户端连接Zookeeper会有一些延时，所以先阻塞一下
-                countDownLatch.countDown();
-                break;
-            case AuthFailed:
-                break;
-            case ConnectedReadOnly:
-                break;
-            case SaslAuthenticated:
-                break;
-            case Expired:
-                break;
-            default:
-                System.out.println("执行了默认");;
+        if (Event.KeeperState.SyncConnected == watchedEvent.getState()) {
+            //这里是创建完链接后，先阻塞一下，因为客户端连接Zookeeper会有一些延时，所以先阻塞一下
+            countDownLatch.countDown();
         }
+//        switch (watchedEvent.getState()) {
+//            case Unknown:
+//                break;
+//            case Disconnected:
+//                break;
+//            case NoSyncConnected:
+//                break;
+//            case SyncConnected:
+//                //这里是创建完链接后，先阻塞一下，因为客户端连接Zookeeper会有一些延时，所以先阻塞一下
+//                countDownLatch.countDown();
+//                break;
+//            case AuthFailed:
+//                break;
+//            case ConnectedReadOnly:
+//                break;
+//            case SaslAuthenticated:
+//                break;
+//            case Expired:
+//                break;
+//            default:
+//                System.out.println("执行了默认");;
+//        }
     }
 }
