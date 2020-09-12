@@ -24,21 +24,16 @@ public class TestDemo {
         zk  = ZkLockUtils.getZookeeper();
     }
 
-//    @After
-//    public void close (){
-//        try {
-//            zk.close();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    @After
+    public void close (){
+        try {
+            zk.close();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
-
-    private static CountDownLatch countDownLatch = new CountDownLatch(1);
-
-
-//    public static void main(String[] args) throws Exception{
-        @Test
+    @Test
     public void test() {
 //        ZooKeeper zooKeeper1 = new ZooKeeper("39.100.90.93:2181", 1000, new Watcher() {
 //            @Override
@@ -83,7 +78,7 @@ public class TestDemo {
                     //业务代码
                     System.out.println("干活。。。。。。");
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -93,11 +88,6 @@ public class TestDemo {
             }.start();
         }
 
-//        try {
-//            zk.close();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
         while (true) {
 
         }
